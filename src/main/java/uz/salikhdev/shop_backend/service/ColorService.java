@@ -28,7 +28,7 @@ public class ColorService {
             throw new AlreadyExistsException("Color with name " + request.hex() + " already exists");
         }
 
-        if(colorRepository.existsByHex(request.hex())){
+        if (colorRepository.existsByHex(request.hex())) {
             Color deletedColor = colorRepository.findByHex(request.hex())
                     .orElseThrow(() -> new NotFoundException("Deleted color not found with hex: " + request.hex()));
             deletedColor.setDeletedAt(null);
@@ -59,6 +59,7 @@ public class ColorService {
     }
 
     public void delete(String id) {
+
         Color color = colorRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new NotFoundException("Color not found with id: " + id));
 
