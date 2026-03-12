@@ -32,6 +32,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
 
+    // Mail sender
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     // Database
     runtimeOnly("org.postgresql:postgresql")
 

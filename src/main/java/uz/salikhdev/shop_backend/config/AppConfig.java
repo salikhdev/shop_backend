@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.salikhdev.shop_backend.repository.UserRepository;
 
+import java.util.Random;
+
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
@@ -43,6 +45,11 @@ public class AppConfig {
     public UserDetailsService userDetailsService() {
         return (username) -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Bean
+    public Random random() {
+        return new Random();
     }
 
 }

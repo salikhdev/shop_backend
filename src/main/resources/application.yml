@@ -2,6 +2,19 @@ spring:
   application:
     name: shop_mudofa
 
+  mail:
+    enabled: true
+    host: smtp.gmail.com
+    port: 587
+    username: "fffastul1@gmail.com"
+    password: "jelr fusj qfot iqtw"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   # Datasource Configuration
   datasource:
     driver-class-name: org.postgresql.Driver

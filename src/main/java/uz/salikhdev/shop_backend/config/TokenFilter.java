@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tools.jackson.databind.ObjectMapper;
+import uz.salikhdev.shop_backend.dto.response.ErrorResponse;
 import uz.salikhdev.shop_backend.entity.User;
 import uz.salikhdev.shop_backend.repository.UserRepository;
 
@@ -20,6 +22,7 @@ import java.io.IOException;
 public class TokenFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(
@@ -46,8 +49,16 @@ public class TokenFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: " + e.getMessage());
+            response.setContentType("application/json");
+            response.getWriter().write(objectMapper.writeValueAsString(
+                    ErrorResponse.builder()
+                            .message("Unauthorized: Token is missing or invalid")
+                            .code(401)
+                            .build()
+            ));
+
         }
     }
 
