@@ -46,6 +46,7 @@ public class AuthService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .role(User.Role.USER)
                 .status(User.Status.UNVERIFIED)
                 .build();
 

@@ -18,9 +18,9 @@ spring:
   # Datasource Configuration
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/my_shop_db
+    url: jdbc:postgresql://localhost:5433/postgres
     username: postgres
-    password: 123
+    password: postgres
 
 
   # Hibernate Configuration
@@ -42,3 +42,7 @@ aws:
     bucket-name: testbuket
     access-key: user #S3Y3CEDGYNRHYK1MRRWW
     secret-key: admin1234 #AEa4tOsvo8jmfznMn3M64c5ejelAP3LQ9ks7BEiH
+
+springdoc:
+  swagger-ui:
+    path: /docs

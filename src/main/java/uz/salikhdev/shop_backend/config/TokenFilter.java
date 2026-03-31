@@ -16,6 +16,7 @@ import uz.salikhdev.shop_backend.entity.User;
 import uz.salikhdev.shop_backend.repository.UserRepository;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 @Component
 @RequiredArgsConstructor
@@ -48,8 +49,8 @@ public class TokenFilter extends OncePerRequestFilter {
             );
 
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
-
+        }
+        catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write(objectMapper.writeValueAsString(
@@ -61,6 +62,8 @@ public class TokenFilter extends OncePerRequestFilter {
 
         }
     }
+
+    // RBAC
 
     @Override
     protected boolean shouldNotFilter(@NotNull HttpServletRequest request) throws ServletException {
