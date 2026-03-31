@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.salikhdev.shop_backend.dto.request.SizeCreateRequest;
 import uz.salikhdev.shop_backend.dto.request.SizeUpdateRequest;
@@ -33,18 +34,21 @@ public class SizeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> create(@RequestBody @Valid SizeCreateRequest request) {
         sizeService.create(request);
         return SuccessResponse.ok("Size created successfully");
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> delete(@PathVariable String id) {
         sizeService.delete(id);
         return SuccessResponse.noContent("Size deleted successfully");
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> update(@PathVariable String id, @RequestBody SizeUpdateRequest request) {
         sizeService.update(id, request);
         return SuccessResponse.ok("Size updated successfully");

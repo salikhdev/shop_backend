@@ -30,6 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     testImplementation("org.springframework.security:spring-security-test")
 
     // Mail sender
@@ -37,6 +38,8 @@ dependencies {
 
     // Database
     runtimeOnly("org.postgresql:postgresql")
+
+    implementation("redis.clients:jedis:7.0.0")
 
     // Lombok
     compileOnly("org.projectlombok:lombok")

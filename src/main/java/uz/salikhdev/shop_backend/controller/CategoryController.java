@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.salikhdev.shop_backend.dto.request.CategoryCreateRequest;
 import uz.salikhdev.shop_backend.dto.request.CategoryUpdateRequest;
@@ -33,18 +34,21 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> create(@RequestBody @Valid CategoryCreateRequest request) {
         categoryService.create(request);
         return SuccessResponse.ok("Category created successfully");
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> delete(@PathVariable String id) {
         categoryService.delete(id);
         return SuccessResponse.noContent("Category deleted successfully");
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<@NonNull SuccessResponse> update(@PathVariable String id, @RequestBody CategoryUpdateRequest request) {
         categoryService.update(id, request);
         return SuccessResponse.ok("Category updated successfully");

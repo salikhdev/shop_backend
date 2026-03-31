@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -35,10 +36,13 @@ public class User extends BaseEntity implements UserDetails {
     private Status status;
     private String token;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @NotNull
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
     }
 
     @NotNull
@@ -49,6 +53,10 @@ public class User extends BaseEntity implements UserDetails {
 
     public enum Status {
         ACTIVE, UNVERIFIED, BLOCKED
+    }
+
+    public enum Role {
+        USER, ADMIN
     }
 
 }

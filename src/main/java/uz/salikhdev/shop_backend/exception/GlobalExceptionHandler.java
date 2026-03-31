@@ -46,8 +46,9 @@ public class GlobalExceptionHandler {
                 );
     }
 
-     @ExceptionHandler({Exception.class})
+    @ExceptionHandler({Exception.class})
     public ResponseEntity<@NonNull ErrorResponse> handleGenericException(Exception ex) {
+        ex.printStackTrace();
         return ResponseEntity
                 .status(500)
                 .body(
@@ -56,6 +57,6 @@ public class GlobalExceptionHandler {
                                 .code(500)
                                 .build()
                 );
-     }
+    }
 
 }

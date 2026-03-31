@@ -2,6 +2,7 @@ package uz.salikhdev.shop_backend.service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,9 @@ import uz.salikhdev.shop_backend.exception.AlreadyExistsException;
 import uz.salikhdev.shop_backend.exception.NotFoundException;
 import uz.salikhdev.shop_backend.repository.UserRepository;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Map<String, Integer> verificationCodes = new HashMap<>();
+    private final StringRedisTemplate verificationCodes;
     private final EmailService emailService;
     private final Random random;
 
@@ -43,6 +46,7 @@ public class AuthService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .role(User.Role.USER)
                 .status(User.Status.UNVERIFIED)
                 .build();
 
@@ -51,9 +55,9 @@ public class AuthService {
     }
 
     private void sendVerificationCode(String email) {
-        verificationCodes.remove(email);
+
         Integer genCode = random.nextInt(1000, 9999);
-        verificationCodes.put(email, genCode);
+        verificationCodes.opsForValue().set(email, genCode.toString());
         emailService.sendVerificationCode(email, genCode);
     }
 
@@ -62,15 +66,19 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
 
-        Integer otp = verificationCodes.get(email);
+        String otp = verificationCodes.opsForValue().get(email);
 
-        if (!otp.equals(code)) {
+        if (otp == null) {
+            throw new NotFoundException("Verification code not found for email " + email);
+        }
+
+        if (!otp.equals(code.toString())) {
             throw new BadCredentialsException("Invalid verification code");
         }
 
         user.setStatus(User.Status.ACTIVE);
         userRepository.save(user);
-        verificationCodes.remove(email);
+        verificationCodes.delete(email);
     }
 
     public String login(UserLoginRequest request) {
